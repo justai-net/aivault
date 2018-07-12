@@ -10,25 +10,25 @@ import (
 
 func main() {
 
-	fileFlags := flag.NewFlagSet("encrypt", flag.ExitOnError)
-	//subDecrypt := flag.NewFlagSet("decrypt", flag.ExitOnError)
-	file := fileFlags.String("file", "", "Selected file to be encrypted/decrypted")
+	flag.Usage = func() {
+		fmt.Println("Usage: aivault [encrypt|decrypt|view] [file]")
+	}
 	flag.Parse()
+	//var file string
+	file := os.Args[2]
 
 	switch os.Args[1] {
 	case "encrypt":
-		fileFlags.Parse(os.Args[2:])
-		fmt.Println(*file)
-		ciphertext := aivault.Encrypt(aivault.ReadFile(*file))
+		//fileFlags.Parse(os.Args[2:])
+		fmt.Println(file)
+		ciphertext := aivault.Encrypt(aivault.ReadFile(file))
 		aivault.OutToFile(ciphertext)
 	case "decrypt":
-		fileFlags.Parse(os.Args[2:])
-		plaintext := aivault.Decrypt(aivault.ReadFile(*file))
+		//fileFlags.Parse(os.Args[2:])
+		plaintext := aivault.Decrypt(aivault.ReadFile(file))
 		aivault.OutToFile(plaintext)
+	case "view":
+		aivault.ViewDecrypted(aivault.ReadFile(file))
 	}
-	//fmt.Printf("Password: %s\n", passphrase)
-	//fmt.Println(createHash(passphrase))
-	aivault.ReadFile()
-	//fmt.Println(ciphertext)
 
 }
