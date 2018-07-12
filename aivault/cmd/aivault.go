@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/justai-net/aivault"
+	"github.com/justai-net/aivault/secrets"
 )
 
 func main() {
