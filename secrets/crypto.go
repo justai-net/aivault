@@ -11,7 +11,7 @@ import (
 	"os"
 )
 
-//CreateHash creates the hash of a given key and returns the hash
+//CreateHash creates the hash of a given string and returns the hash
 func CreateHash(key string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(key))
