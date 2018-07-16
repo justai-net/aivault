@@ -14,7 +14,6 @@ func main() {
 		fmt.Println("Usage: aivault [encrypt|decrypt|view] [file]")
 	}
 	flag.Parse()
-	//var file string
 	file := os.Args[2]
 
 	switch os.Args[1] {
