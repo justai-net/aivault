@@ -22,13 +22,15 @@ func main() {
 		//fileFlags.Parse(os.Args[2:])
 		fmt.Println(file)
 		ciphertext := aivault.Encrypt(aivault.ReadFile(file))
-		aivault.OutToFile(ciphertext)
+		aivault.OutToFile(ciphertext, file)
 	case "decrypt":
 		//fileFlags.Parse(os.Args[2:])
 		plaintext := aivault.Decrypt(aivault.ReadFile(file))
-		aivault.OutToFile(plaintext)
+		aivault.OutToFile(plaintext, file)
 	case "view":
-		aivault.ViewDecrypted(aivault.ReadFile(file))
+		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
+		s := string(plaintext)
+		fmt.Println(s)
 	}
 
 }

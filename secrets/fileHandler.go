@@ -17,8 +17,8 @@ func ReadFile(file string) []byte {
 }
 
 //OutToFile given the byte value output to file
-func OutToFile(plainCipherText []byte) {
-	f, err := os.Create("file.txt")
+func OutToFile(plainCipherText []byte, file string) {
+	f, err := os.Create(file)
 	if err != nil {
 		panic(err.Error())
 	}
