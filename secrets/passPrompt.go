@@ -31,6 +31,5 @@ func Credentials(confirm bool) (password string) {
 		}
 	}
 	password = string(bytePassword)
-
 	return
 }

@@ -3,19 +3,19 @@ package aivault
 import (
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/md5"
 	"crypto/rand"
-	"encoding/hex"
+	"crypto/sha256"
 	"fmt"
 	"io"
-	"os"
 )
 
 //CreateHash creates the hash of a given string and returns the hash
-func CreateHash(key string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(key))
-	return hex.EncodeToString(hasher.Sum(nil))
+func CreateHash(key string) []byte {
+	//hasher := md5.New()
+	//hasher.Write([]byte(key))
+	//return hex.EncodeToString(hasher.Sum(nil))
+	hasher := sha256.Sum256([]byte(key))
+	return hasher[:]
 }
 
 //Encrypt encrypts the byte file with AES and given passphrase
@@ -55,7 +55,7 @@ func Decrypt(data []byte) []byte {
 }
 
 //ViewDecrypted print out decrypted values to terminal
-func ViewDecrypted(data []byte) {
+func ViewDecrypted(data []byte) []byte {
 	passphrase := Credentials(false)
 	key := []byte(CreateHash(passphrase))
 	block, err := aes.NewCipher(key)
@@ -69,5 +69,5 @@ func ViewDecrypted(data []byte) {
 	if err != nil {
 		panic(err.Error())
 	}
-	os.Stderr.WriteString(string(plaintext))
+	return plaintext
 }
