@@ -29,7 +29,7 @@ func main() {
 	case "view":
 		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
 		s := string(plaintext)
-		fmt.Println(s)
+		fmt.Print(s)
 	}
 
 }
