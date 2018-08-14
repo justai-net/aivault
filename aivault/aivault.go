@@ -58,6 +58,7 @@ func main() {
 	case "view":
 		viewCommand.Parse(os.Args[2:])
 		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
+<<<<<<< HEAD
 		if len(os.Args) <= 3 {
 			accounts := aivault.GetAllAccounts(plaintext)
 			os.Stderr.WriteString("Available Accounts")
@@ -70,6 +71,11 @@ func main() {
 			s = aivault.GetAccount(plaintext, os.Args[3])
 			fmt.Println(string(s))
 		}
+=======
+		s := string(plaintext)
+		fmt.Print(s)
+	}
+>>>>>>> c001eda60e060b4d62dff9157a12c1befd2b2812
 
 	case "copy":
 		copyCommand.Parse(os.Args[2:])
