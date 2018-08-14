@@ -11,8 +11,8 @@ import (
 
 //Credentials prompts the user for a password with confirmation
 func Credentials(confirm bool) (password string) {
-	os.Stderr.WriteString("Password: ") //To ignore pipes
 	l := log.New(os.Stderr, "", 0)
+	os.Stderr.WriteString("Password: ") //To ignore pipes
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	l.Println() // Stderr new line, ignore pipes
 	if err != nil {
