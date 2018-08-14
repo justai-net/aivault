@@ -1,4 +1,17 @@
 # aivault
-Simple program to encrypt or decrypt a file, view accounts and copy password to clipboard
+A command-line interface for secrets management.
 
-name:username:password
+##Usage:
+    aivault [command] [flags] file_name
+
+Available Commands:
+    encrypt     Encrypt file with a passphrase.
+    decrypt     Decrypt file with the original passphrase.
+    view        View account names or username if supplied.
+    copy        Copy password into clipboard.
+    add         Add a new entry into the file
+
+Flags:
+    -h, --help  help for this command
+
+Use "[command] --help"  for more information about a command.

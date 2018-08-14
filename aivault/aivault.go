@@ -3,21 +3,33 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"log"
 	"os"
 	"runtime"
 
 	aivault "github.com/justai-net/aivault/secrets"
 )
 
+var usage = `A command-line interface for secrets management.
+
+Usage:
+    aivault [command] [flags] file_name
+
+Available Commands:
+    encrypt     Encrypt file with a passphrase.
+    decrypt     Decrypt file with the original passphrase.
+    view        View account names or username if supplied.
+    copy        Copy password into clipboard.
+    add         Add a new entry into the file
+
+Flags:
+    -h, --help  help for this command
+
+Use "[command] --help"  for more information about a command.
+`
+
 func main() {
-	b, err := ioutil.ReadFile("usage.txt")
-	if err != nil {
-		fmt.Print(err)
-	}
 	flag.Usage = func() {
-		fmt.Println(string(b))
+		fmt.Fprintf(os.Stderr, string(usage))
 	}
 
 	flag.Parse()
@@ -29,6 +41,10 @@ func main() {
 	addCommand := flag.NewFlagSet("add", flag.ExitOnError)
 
 	// Add subcommand flags pointers
+	addCommand.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: aivault add [flags] file_name \n")
+		addCommand.PrintDefaults()
+	}
 	addCommandaccount := addCommand.String("accountname", "", "Name for the account")
 	addCommandusername := addCommand.String("username", "", "Username for the account")
 
@@ -42,40 +58,28 @@ func main() {
 	switch os.Args[1] {
 	case "encrypt":
 		encryptCommand.Parse(os.Args[2:])
-		//fileFlags.Parse(os.Args[2:])
-		l := log.New(os.Stderr, "", 0)
-		os.Stderr.WriteString("Encrypting file " + file + " with AES-256")
-		l.Println()
+		fmt.Fprintf(os.Stderr, "Encrypting file "+file+" with AES-256")
+		fmt.Fprintf(os.Stderr, "\n")
 		ciphertext := aivault.Encrypt(aivault.ReadFile(file))
 		aivault.OutToFile(ciphertext, file)
-
 	case "decrypt":
 		decryptCommand.Parse(os.Args[2:])
-		//fileFlags.Parse(os.Args[2:])
 		plaintext := aivault.Decrypt(aivault.ReadFile(file))
 		aivault.OutToFile(plaintext, file)
-
 	case "view":
 		viewCommand.Parse(os.Args[2:])
 		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
-<<<<<<< HEAD
 		if len(os.Args) <= 3 {
 			accounts := aivault.GetAllAccounts(plaintext)
-			os.Stderr.WriteString("Available Accounts")
+			fmt.Fprintf(os.Stderr, "Available Accounts")
 			fmt.Println()
 			for i := range accounts {
 				fmt.Println(accounts[i])
 			}
 		} else {
-			var s []byte
-			s = aivault.GetAccount(plaintext, os.Args[3])
-			fmt.Println(string(s))
+			aivault.GetAccount(plaintext, os.Args[3])
 		}
-=======
-		s := string(plaintext)
-		fmt.Print(s)
-	}
->>>>>>> c001eda60e060b4d62dff9157a12c1befd2b2812
+		fmt.Fprintf(os.Stderr, "\nUsage to copy password to clipboard:\naivault copy file_name [account_name]\n")
 
 	case "copy":
 		copyCommand.Parse(os.Args[2:])

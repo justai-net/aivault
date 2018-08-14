@@ -82,18 +82,24 @@ func GetPassword(output []byte, account string) (passValue []byte) {
 	return
 }
 
-//GetAccount returns only password value
-func GetAccount(output []byte, account string) (userValue []byte) {
+//GetAccount returns accountname and username
+func GetAccount(output []byte, account string) (accountValue []byte, userValue []byte) {
 	scanner := bufio.NewScanner(strings.NewReader(string(output)))
 	for scanner.Scan() {
 		s := strings.Split(scanner.Text(), ":")
 		a, u, _ := s[0], s[1], s[2]
 		if a == account {
-			fmt.Println("Account: " + a)
-			fmt.Println("Username: " + u)
+			accountValue = []byte(a)
 			userValue = []byte(u)
+			fmt.Fprintf(os.Stderr, "Found Account!\n")
+			fmt.Fprintf(os.Stderr, "Account Name: "+string(accountValue)+"\n")
+			fmt.Fprintf(os.Stderr, "Username: "+string(userValue)+"\n")
+			fmt.Fprintf(os.Stderr, "Password: **********\n")
+			return
 		}
 	}
+	fmt.Fprintf(os.Stderr, "Account %s not found in this file.\n", string(account))
+	os.Exit(1)
 	return
 }
 
