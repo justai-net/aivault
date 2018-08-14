@@ -1,9 +1,12 @@
 # aivault
 A command-line interface for secrets management.
 
-##Usage:
-    aivault [command] [flags] file_name
+## Usage
 
+```
+Usage:
+    aivault [command] [flags] file_name
+    
 Available Commands:
     encrypt     Encrypt file with a passphrase.
     decrypt     Decrypt file with the original passphrase.
@@ -15,3 +18,4 @@ Flags:
     -h, --help  help for this command
 
 Use "[command] --help"  for more information about a command.
+```
