@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"runtime"
@@ -11,21 +12,36 @@ import (
 )
 
 func main() {
-
-	flag.Usage = func() {
-		fmt.Println("Usage: aivault [encrypt|decrypt|view|copy] [file]")
+	b, err := ioutil.ReadFile("usage.txt")
+	if err != nil {
+		fmt.Print(err)
 	}
+	flag.Usage = func() {
+		fmt.Println(string(b))
+	}
+
 	flag.Parse()
-	if len(os.Args) <= 2 {
+	// Subcommands
+	encryptCommand := flag.NewFlagSet("encrypt", flag.ExitOnError)
+	decryptCommand := flag.NewFlagSet("decrypt", flag.ExitOnError)
+	viewCommand := flag.NewFlagSet("view", flag.ExitOnError)
+	copyCommand := flag.NewFlagSet("copy", flag.ExitOnError)
+	addCommand := flag.NewFlagSet("add", flag.ExitOnError)
+
+	// Add subcommand flags pointers
+	addCommandaccount := addCommand.String("accountname", "", "Name for the account")
+	addCommandusername := addCommand.String("username", "", "Username for the account")
+
+	if len(os.Args) < 2 {
 		flag.Usage()
 		os.Exit(1)
 	}
-
 	file := os.Args[2]
 	arch := runtime.GOOS
 
 	switch os.Args[1] {
 	case "encrypt":
+		encryptCommand.Parse(os.Args[2:])
 		//fileFlags.Parse(os.Args[2:])
 		l := log.New(os.Stderr, "", 0)
 		os.Stderr.WriteString("Encrypting file " + file + " with AES-256")
@@ -34,11 +50,13 @@ func main() {
 		aivault.OutToFile(ciphertext, file)
 
 	case "decrypt":
+		decryptCommand.Parse(os.Args[2:])
 		//fileFlags.Parse(os.Args[2:])
 		plaintext := aivault.Decrypt(aivault.ReadFile(file))
 		aivault.OutToFile(plaintext, file)
 
 	case "view":
+		viewCommand.Parse(os.Args[2:])
 		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
 		if len(os.Args) <= 3 {
 			accounts := aivault.GetAllAccounts(plaintext)
@@ -54,11 +72,16 @@ func main() {
 		}
 
 	case "copy":
+		copyCommand.Parse(os.Args[2:])
 		if len(os.Args) <= 3 {
 			os.Stderr.WriteString("Enter Selected username to get password: ")
 			os.Exit(1)
 		}
 		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
 		aivault.ToClipboard(aivault.GetPassword(plaintext, os.Args[3]), arch)
+	case "add":
+		addCommand.Parse(os.Args[2:])
+		fmt.Println(*addCommandaccount)
+		fmt.Println(*addCommandusername)
 	}
 }
