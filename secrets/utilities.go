@@ -97,7 +97,7 @@ func GetAccount(output []byte, account string) (userValue []byte) {
 	return
 }
 
-//Getallaccount returns all Accounts
+//GetAllAccounts returns all Accounts
 func GetAllAccounts(output []byte) (user []string) {
 	scanner := bufio.NewScanner(strings.NewReader(string(output)))
 	for scanner.Scan() {
