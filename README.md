@@ -4,6 +4,11 @@ A command-line interface for secrets management.
 ## Usage
 
 ```
+# go build
+# ./aivault
+```
+
+```
 Usage:
     aivault [command] [flags] file_name
     
