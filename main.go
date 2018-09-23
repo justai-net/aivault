@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-
-	aivault "github.com/justai-net/aivault/secrets"
 )
 
 var usage = `A command-line interface for secrets management.
@@ -60,24 +58,24 @@ func main() {
 		encryptCommand.Parse(os.Args[2:])
 		fmt.Fprintf(os.Stderr, "Encrypting file "+file+" with AES-256")
 		fmt.Fprintf(os.Stderr, "\n")
-		ciphertext := aivault.Encrypt(aivault.ReadFile(file))
-		aivault.OutToFile(ciphertext, file)
+		ciphertext := Encrypt(ReadFile(file))
+		OutToFile(ciphertext, file)
 	case "decrypt":
 		decryptCommand.Parse(os.Args[2:])
-		plaintext := aivault.Decrypt(aivault.ReadFile(file))
-		aivault.OutToFile(plaintext, file)
+		plaintext := Decrypt(ReadFile(file))
+		OutToFile(plaintext, file)
 	case "view":
 		viewCommand.Parse(os.Args[2:])
-		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
+		plaintext := ViewDecrypted(ReadFile(file))
 		if len(os.Args) <= 3 {
-			accounts := aivault.GetAllAccounts(plaintext)
+			accounts := GetAllAccounts(plaintext)
 			fmt.Fprintf(os.Stderr, "Available Accounts")
 			fmt.Println()
 			for i := range accounts {
 				fmt.Println(accounts[i])
 			}
 		} else {
-			aivault.GetAccount(plaintext, os.Args[3])
+			GetAccount(plaintext, os.Args[3])
 		}
 		fmt.Fprintf(os.Stderr, "\nUsage to copy password to clipboard:\naivault copy file_name [account_name]\n")
 
@@ -87,8 +85,8 @@ func main() {
 			os.Stderr.WriteString("Enter Selected username to get password: ")
 			os.Exit(1)
 		}
-		plaintext := aivault.ViewDecrypted(aivault.ReadFile(file))
-		aivault.ToClipboard(aivault.GetPassword(plaintext, os.Args[3]), arch)
+		plaintext := ViewDecrypted(ReadFile(file))
+		ToClipboard(GetPassword(plaintext, os.Args[3]), arch)
 	case "add":
 		addCommand.Parse(os.Args[2:])
 		fmt.Println(*addCommandaccount)

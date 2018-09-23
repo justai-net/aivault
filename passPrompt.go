@@ -1,4 +1,4 @@
-package aivault
+package main
 
 import (
 	"fmt"
